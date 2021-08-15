@@ -1,0 +1,27 @@
+//indx.html
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript">
+function ajaxfunction()
+{
+	var ajax=new XMLHttpRequest();
+	ajax.onreadystatechange=function()
+	{
+		if(this.readyState==4 && this.status==200)
+			{
+			alert(this.responseText);
+			}
+	};
+	ajax.open("POST","file_path",true);
+	ajax.send();
+	}</script>
+</head>
+<body>
+<button onclick="ajaxfunction()">call</button>
+</body>
+</html>
