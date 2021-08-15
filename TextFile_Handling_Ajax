@@ -1,0 +1,126 @@
+//index.html
+
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript">
+function pass()
+{
+  var f_name       = document.getElementById("uname").value;
+	var data = 
+  {
+  Name  : f_name
+	}
+	var d = JSON.stringify(data);
+	console.log(data);
+  console.log(d);
+  xmlhttp=new XMLHttpRequest();
+  xmlhttp.open("POST","ajax",true);
+  xmlhttp.send(d);
+}
+</script>
+</head>
+<body>
+<form onsubmit="pass()">
+    <input type="text" name="uname" id="uname">
+    <input type="submit" name="submit" value="Send me!" id="my-button">
+</form>
+</html>
+
+//servlet class file
+
+
+
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Iterator;
+
+import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+@WebServlet("/ajax")
+
+public class Ajx extends HttpServlet {
+	
+	private static final long serialVersionUID = 1L;
+
+	public void service(HttpServletRequest req,HttpServletResponse res) throws IOException, ServletException
+	{	
+		PrintWriter out= res.getWriter();
+	
+    // Read from request*/
+	
+	
+    StringBuilder buffer = new StringBuilder();
+    BufferedReader reader = req.getReader();
+    String line;
+    while ((line = reader.readLine()) != null) {
+        buffer.append(line);
+        buffer.append(System.lineSeparator());
+    }
+    String data = buffer.toString();
+  	out.println(data);
+  	System.out.println("servlet");
+	  System.out.println(data);
+  
+  //append file
+	
+    try {
+    	  
+        // Open given file in append mode.
+        BufferedWriter out1 = new BufferedWriter(new FileWriter("file_path", true));
+        out1.write(data);
+        out1.close();
+    }
+    catch (IOException e) {
+        System.out.println("exception occoured" + e);
+    }
+	
+	//read file
+	
+    File file = new File("file_path");
+
+  	try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+	 	String st;
+		  while ((st = br.readLine()) != null)
+		  {
+				out.println(st+"\n");
+			  System.out.println(st+"\n");
+		  }
+	 }
+	  RequestDispatcher rd=req.getRequestDispatcher("index.jsp");
+	  rd.forward(req, res);
+}
+}
+
+
+//index.jsp
+<%
+File file = new File("file_path");
+
+try (BufferedReader br = new BufferedReader(new FileReader(file))) {
+	String st;
+	  while ((st = br.readLine()) != null)
+	  {
+			out.println(st+"\n");
+			%><br><% 
+		  System.out.println(st+"\n");
+	  }
+}
+%>
