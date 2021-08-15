@@ -1,0 +1,98 @@
+//index.jsp
+
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<body>
+<form action="name">
+name:<input type="text" name="aname"><br>
+<input type="submit">
+</form>
+</body>
+</html>
+
+
+
+//servlet_filter
+
+package com.filter;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.HttpServletRequest;
+@WebFilter("/name")
+public class Name implements Filter {
+
+
+    public Name() {
+        // TODO Auto-generated constructor stub
+    }
+	public void destroy() {
+		// TODO Auto-generated method stub
+	}
+	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+		// TODO Auto-generated method stub
+		// place your code here
+		
+		PrintWriter out =response.getWriter();
+		
+		System.out.println("filter");
+		HttpServletRequest req = (HttpServletRequest) request;
+		String name = request.getParameter("aname");
+		
+		if(name =="")
+			out.print("invalid");
+		//	chain.doFilter(request, response);
+		else
+			chain.doFilter(request, response);
+		//	out.print("invalid");
+		
+		// pass the request along the filter chain
+		//chain.doFilter(request, response);
+	}
+	public void init(FilterConfig fConfig) throws ServletException {
+		// TODO Auto-generated method stub
+	}
+
+}
+
+//servlet class file
+
+package com.filter;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+@WebServlet("/name")
+public class My extends HttpServlet {
+
+	private static final long serialVersionUID = 1L;
+
+	public void service(HttpServletRequest req,HttpServletResponse res) throws IOException
+	{
+		String name=req.getParameter("aname");
+		
+		PrintWriter out= res.getWriter();
+		
+		out.println("welcome  "+ name);
+	}
+
+}
+
